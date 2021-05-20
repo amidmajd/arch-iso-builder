@@ -1,2 +1,3 @@
-# arch-iso-builder
-My Arch linux + GUI live iso builder 
+# Arch iso Builder
+
+My `Arch linux + GUI` live iso builder
