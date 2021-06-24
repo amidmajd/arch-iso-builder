@@ -1,1 +1,0 @@
-../arch_install_helper.sh

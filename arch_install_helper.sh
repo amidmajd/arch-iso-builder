@@ -1,3 +1,6 @@
+# Grow arch root partition size on the fly
+mount -o remount,size=2G /run/archiso/cowspace
+
 fdisk -l    # sda1 : efi, sda2 : swap, sda3 : root, sda4 : home
 mkfs.fat -F32 /dev/vda1
 mkfs.ext4 /dev/vda3
@@ -48,7 +51,7 @@ mkinitcpio -P
 #MBR =>
 grub-install --recheck --target=i386-pc --bootloader-id=GRUB  /dev/vda
 #EFI =>
-grub-install --recheck --target=x86_64-efi --bootloader-id=GRUB
+grub-install --recheck --target=x86_64-efi --bootloader-id=Arch
 
 grub-mkconfig -o /boot/grub/grub.cfg
 
@@ -60,7 +63,7 @@ systemctl enable NetworkManager bluetooth cups
 pacman -S cinnamon gnome-keyring gnome-terminal alacritty
 pacman -S xmonad xmonad-contrib xmobar picom rofi alacritty
 pacman -S gnome gdm gnome-extra
-pacman -S plasma-meta sddm plasma-wayland-session kde-system-meta konsole kdeconnect dolphin-plugins kwalletmanager ark lrzip lzop p7zip unrar unarchiver kompare filelight kcalc gwenview kcolorchooser okular kdenlive elisa kdenetwork-filesharing print-manager
+pacman -S plasma-meta sddm plasma-wayland-session kde-system-meta konsole kdeconnect dolphin-plugins kwalletmanager ark lrzip lzop p7zip unrar unarchiver filelight kcalc gwenview kcolorchooser okular kdenlive elisa kdenetwork-filesharing print-manager
 
 
 pacman -S lightdm lightdm-webkit2-greeter
