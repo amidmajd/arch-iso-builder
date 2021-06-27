@@ -1,6 +1,8 @@
 # Grow arch root partition size on the fly
 mount -o remount,size=2G /run/archiso/cowspace
 
+timedatectl set-ntp true
+
 fdisk -l    # sda1 : efi, sda2 : swap, sda3 : root, sda4 : home
 mkfs.fat -F32 /dev/vda1
 mkfs.ext4 /dev/vda3
@@ -13,8 +15,13 @@ mkdir /mnt/home
 mount /dev/vda1 /mnt/boot/efi
 mount -o noatime /dev/vda4 /mnt/home
 
+sed -i 's/#ParallelDownloads/ParallelDownloads/' /etc/pacman.conf
 reflector --country United_Kingdom,Germany  --verbose --latest 10 -a 12 --protocol http,https --sort rate --save /etc/pacman.d/mirrorlist
-pacstrap /mnt base linux linux-firmware reflector
+pacman -Sy
+pacstrap /mnt base linux-zen linux-zen-headers linux-firmware reflector vim htop
+sed -i 's/#VerbosePkgLists/VerbosePkgLists/' /etc/pacman.conf   # can't cp pacman.conf from ISO, it's configured a bit differently
+sed -i 's/#ParallelDownloads/ParallelDownloads/' /etc/pacman.conf
+cp -f /etc/pacman.d/mirrorlist /mnt/etc/pacman.d/mirrorlist
 genfstab -U -p /mnt >> /mnt/etc/fstab
 
 arch-chroot /mnt
@@ -22,17 +29,16 @@ arch-chroot /mnt
 ### after arch-chroot ###
 ln -sf /usr/share/zoneinfo/Asia/Tehran /etc/localtime
 hwclock --systohc
-pacman -S vim htop
-vim /etc/pacman.conf
-vim /etc/locale.gen     # uncomment en_US.UTF-8 UTF-8
+sed -i 's/#en_US.UTF-8/en_US.UTF-8/' locale.gen     # setting locale
+sed -i 's/#fa_IR/fa_IR/' /etc/locale.gen
 locale-gen
 echo "LANG=en_US.UTF-8" >> /etc/locale.conf
-echo "archLinux" >> /etc/hostname
+echo "ArchLinux" >> /etc/hostname
 
 echo "
 127.0.0.1   localhost
 ::1         localhost
-127.0.1.1   archLinux.localdomain  archLinux
+127.0.1.1   ArchLinux.localdomain  ArchLinux
 " > /etc/hosts
 
 passwd
@@ -40,16 +46,15 @@ useradd -m amidmajd
 passwd amidmajd
 usermod -aG wheel,audio,video,optical,storage amidmajd
 pacman -S --needed base-devel sudo git
-visudo
+sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/' /etc/sudoers    # activating wheel group (uncommenting %wheel ALL=(ALL) ALL)
 
-pacman -S grub efibootmgr dosfstools mtools os-prober linux-headers intel-ucode
+pacman -S grub efibootmgr dosfstools mtools os-prober intel-ucode
 pacman -S xf86-video-qxl
-pacman -S linux-zen linux-zen-headers linux-headers
 
 mkinitcpio -P
 
 #MBR =>
-grub-install --recheck --target=i386-pc --bootloader-id=GRUB  /dev/vda
+grub-install --recheck --target=i386-pc --bootloader-id=Arch  /dev/vda
 #EFI =>
 grub-install --recheck --target=x86_64-efi --bootloader-id=Arch
 
@@ -58,30 +63,31 @@ grub-mkconfig -o /boot/grub/grub.cfg
 
 pacman -S networkmanager network-manager-applet networkmanager-openvpn wireless_tools wpa_supplicant dialog blueberry cups
 pacman -S xorg
+pacman -S alacritty firefox net-tools neofetch
 systemctl enable NetworkManager bluetooth cups
 
-pacman -S cinnamon gnome-keyring gnome-terminal alacritty
-pacman -S xmonad xmonad-contrib xmobar picom rofi alacritty
+# Desktops
+pacman -S cinnamon gnome-keyring xdg-user-dirs
 pacman -S gnome gdm gnome-extra
 pacman -S plasma-meta sddm plasma-wayland-session kde-system-meta konsole kdeconnect dolphin-plugins kwalletmanager ark lrzip lzop p7zip unrar unarchiver filelight kcalc gwenview kcolorchooser okular kdenlive elisa kdenetwork-filesharing print-manager
 
 
-pacman -S lightdm lightdm-webkit2-greeter
-paru lightdm-webkit-theme-aether
+pacman -S lightdm lightdm-gtk-greeter
 vim /etc/lightdm/lightdm.conf
-# greeter-session=lightdm-webkit2-greeter
-# for virtual machine : display-setup-script=xrandr --output Virtual-1 --mode 1366x768
-systemctl enable lightdm gdm sddm
+# greeter-session=lightdm-gtk-greeter
+# for virtual machine : display-setup-script=xrandr --output Virtual-1 --mode (1360x768 | 1366x768)
+systemctl enable lightdm | gdm | sddm
 
 
-# fix picom for virtual machine :
-## vim /etc/xdg/picom.conf  ==> comment "vsync" option
-
-pacman -S openssh net-tools neofetch
+# VMs
+# fix picom for VMs: vim /etc/xdg/picom.conf  ==> comment "vsync" option
+pacman -S openssh
 vim /etc/ssh/sshd_config       # PermitRootLogin yes
 systemctl enable sshd
-dmesg -wH
+
+# Cleanup
 pacman -Rsn $(pacman -Qdtq)
 
+# EXIT CHROOT
 umount -a
 reboot
