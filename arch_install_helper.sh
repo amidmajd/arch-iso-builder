@@ -15,12 +15,10 @@ mkdir /mnt/home
 mount /dev/vda1 /mnt/boot/efi
 mount -o noatime /dev/vda4 /mnt/home
 
-sed -i 's/#ParallelDownloads/ParallelDownloads/' /etc/pacman.conf
 reflector --country United_Kingdom,Germany  --verbose --latest 10 -a 12 --protocol http,https --sort rate --save /etc/pacman.d/mirrorlist
 pacman -Sy
 pacstrap /mnt base linux-zen linux-zen-headers linux-firmware reflector vim htop
-sed -i 's/#VerbosePkgLists/VerbosePkgLists/' /etc/pacman.conf   # can't cp pacman.conf from ISO, it's configured a bit differently
-sed -i 's/#ParallelDownloads/ParallelDownloads/' /etc/pacman.conf
+cp -f /etc/pacman.conf /mnt/etc/pacman.conf
 cp -f /etc/pacman.d/mirrorlist /mnt/etc/pacman.d/mirrorlist
 genfstab -U -p /mnt >> /mnt/etc/fstab
 
