@@ -1,8 +1,8 @@
 # Arch KDE
 
-`sddm` should be installed
-
-### Run these :
+## Guide
+- Install `SSDM` on the main system.
+- Run these commands:
 
 ```sh
 mkdir -p airootfs/etc/systemd/system/multi-user.target.wants
