@@ -67,7 +67,7 @@ systemctl enable NetworkManager bluetooth cups fstrim.timer
 # Desktops
 pacman -S cinnamon gnome-keyring xdg-user-dirs
 pacman -S gnome gdm gnome-extra
-pacman -S plasma-desktop sddm sddm-kcm kwayland-integration plasma-wayland-session konsole dolphin dolphin-plugins kdeconnect kcron ksystemlog plasma-disks plasma-systemmonitor kwalletmanager kwallet-pam gparted gnome-disk-utility ark lrzip lzop p7zip unrar unarchiver filelight kcalc gwenview okular kdenlive elisa kdenetwork-filesharing print-manager bluedevil breeze-gtk drkonqi kde-gtk-config kdeplasma-addons kgamma5 khotkeys kinfocenter kscreen ksshaskpass kwrited plasma-browser-integration plasma-firewall plasma-nm plasma-pa plasma-thunderbolt plasma-workspace-wallpapers powerdevil xdg-desktop-portal-kde
+pacman -S plasma-desktop sddm sddm-kcm kwayland-integration plasma-wayland-session konsole dolphin dolphin-plugins kdeconnect kcron ksystemlog plasma-disks plasma-systemmonitor kwalletmanager kwallet-pam gnome-keyring seahorse gparted gnome-disk-utility ark lrzip lzop p7zip unrar unarchiver filelight kcalc gwenview okular kdenlive kdenetwork-filesharing print-manager bluedevil breeze-gtk drkonqi kde-gtk-config kdeplasma-addons kgamma5 khotkeys kinfocenter kscreen ksshaskpass kwrited plasma-browser-integration plasma-firewall plasma-nm plasma-pa plasma-thunderbolt plasma-workspace-wallpapers powerdevil xdg-desktop-portal-kde
 
 # Login Managers
 pacman -S lightdm lightdm-gtk-greeter
