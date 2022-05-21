@@ -17,7 +17,7 @@ mount -o noatime /dev/vda4 /mnt/home
 
 reflector --country United_Kingdom,Germany  --verbose --latest 30 -a 12 --protocol http,https --sort rate --save /etc/pacman.d/mirrorlist
 pacman -Sy
-pacman-key --refresh-keys # or pacman -S archlinux-keyring
+pacman -S archlinux-keyring
 pacstrap /mnt base linux-zen linux-zen-headers linux-firmware reflector vim htop
 cp -f /etc/pacman.conf /mnt/etc/pacman.conf
 cp -f /etc/pacman.d/mirrorlist /mnt/etc/pacman.d/mirrorlist
