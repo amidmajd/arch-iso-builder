@@ -1,5 +1,5 @@
 # Grow arch root partition size on the fly
-mount -o remount,size=2G /run/archiso/cowspace
+mount -o remount,size=4G /run/archiso/cowspace
 
 timedatectl set-ntp true
 
@@ -45,7 +45,7 @@ useradd -m amidmajd
 passwd amidmajd
 usermod -aG wheel,audio,video,optical,storage amidmajd
 pacman -S --needed base-devel sudo git
-sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/' /etc/sudoers    # activating wheel group (uncommenting %wheel ALL=(ALL) ALL)
+sed -i 's/# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers    # activating wheel group (uncommenting %wheel ALL=(ALL) ALL)
 
 pacman -S grub efibootmgr dosfstools mtools os-prober intel-ucode
 pacman -S xf86-video-qxl
@@ -74,6 +74,7 @@ pacman -S plasma-desktop sddm sddm-kcm kwayland-integration plasma-wayland-sessi
 pacman -S lightdm lightdm-gtk-greeter
 vim /etc/lightdm/lightdm.conf
 # greeter-session=lightdm-gtk-greeter
+# logind-check-graphical=true
 # for virtual machine : display-setup-script=xrandr --output Virtual-1 --mode (1360x768 | 1366x768)
 systemctl enable lightdm | gdm | sddm
 
